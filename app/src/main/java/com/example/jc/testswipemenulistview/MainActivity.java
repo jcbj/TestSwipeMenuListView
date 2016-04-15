@@ -51,8 +51,7 @@ public class MainActivity extends AppCompatActivity {
             @Override
             public void create(SwipeMenu menu) {
                 // create "open" item
-                SwipeMenuItem openItem = new SwipeMenuItem(
-                        getApplicationContext());
+                SwipeMenuItem openItem = new SwipeMenuItem(getApplicationContext());
                 // set item background
                 openItem.setBackground(new ColorDrawable(Color.rgb(0xC9, 0xC9, 0xCE)));
                 // set item width
@@ -67,8 +66,7 @@ public class MainActivity extends AppCompatActivity {
                 menu.addMenuItem(openItem);
 
                 // create "delete" item
-                SwipeMenuItem deleteItem = new SwipeMenuItem(
-                        getApplicationContext());
+                SwipeMenuItem deleteItem = new SwipeMenuItem(getApplicationContext());
                 // set item background
                 deleteItem.setBackground(new ColorDrawable(Color.rgb(0xF9, 0x3F, 0x25)));
                 // set item width
@@ -150,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
             intent.setData(Uri.fromParts("package", item.packageName, null));
             startActivity(intent);
         } catch (Exception e) {
+            return;
         }
     }
 
@@ -195,26 +194,28 @@ public class MainActivity extends AppCompatActivity {
         @Override
         public View getView(int position, View convertView, ViewGroup parent) {
             if (convertView == null) {
-                convertView = View.inflate(getApplicationContext(),
-                        R.layout.item_list_app, null);
-                new ViewHolder(convertView);
+                convertView = View.inflate(getApplicationContext(), R.layout.item_list_app, null);
+                convertView.setTag(new ViewHolder(convertView));
             }
             ViewHolder holder = (ViewHolder) convertView.getTag();
             ApplicationInfo item = getItem(position);
             holder.iv_icon.setImageDrawable(item.loadIcon(getPackageManager()));
             holder.tv_name.setText(item.loadLabel(getPackageManager()));
+
             holder.iv_icon.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(MainActivity.this, "iv_icon_click", Toast.LENGTH_SHORT).show();
                 }
             });
+
             holder.tv_name.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View v) {
                     Toast.makeText(MainActivity.this,"iv_icon_click",Toast.LENGTH_SHORT).show();
                 }
             });
+
             return convertView;
         }
 
@@ -225,16 +226,12 @@ public class MainActivity extends AppCompatActivity {
             public ViewHolder(View view) {
                 iv_icon = (ImageView) view.findViewById(R.id.iv_icon);
                 tv_name = (TextView) view.findViewById(R.id.tv_name);
-                view.setTag(this);
             }
         }
 
         @Override
         public boolean getSwipEnableByPosition(int position) {
-            if(position % 2 == 0){
-                return false;
-            }
-            return true;
+            return (1 == (position % 2));
         }
     }
 
